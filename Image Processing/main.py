@@ -87,20 +87,13 @@ img_gray = cv2.imread(ImagePath, cv2.IMREAD_REDUCED_GRAYSCALE_4)
 # IPH.DisplayMultiple({"Original": img,
 #                      "Filtered": IPH.colorFilter(img, lower, upper)})
 
-# gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-# edges = cv2.Canny(gray, 50, 150, apertureSize=3)
-# lines = cv2.HoughLines(edges, 1, np.pi/180, 200)
-# for r_theta in lines[0]:
-#     r, theta = r_theta
-#     a = np.cos(theta)
-#     b = np.sin(theta)
-#     x0 = a*r
-#     y0 = b*r
-#     x1 = int(x0 + 1000*(-b))
-#     y1 = int(y0 + 1000*(a))
-#     x2 = int(x0 - 1000*(-b))
-#     y2 = int(y0 - 1000*(a))
-#     cv2.line(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-# IPH.Display("Image", img)
+# # Hough Lines
+# res, hough = IPH.HoughLines(img)
+# if res == "Found":
+#     IPH.DisplayMultiple({"Original": img,
+#                         "Hough": hough})
+# else:
+#     print("No Lines")
+
 
 cv2.destroyAllWindows()

@@ -105,3 +105,25 @@ def colorFilterMask(src, lower, upper):
 
 def colorFilter(src, lower, upper):
     return cv2.bitwise_and(src, src, mask=colorFilterMask(src, lower, upper))
+
+
+def HoughLines(src):
+    img1 = src.copy()
+    lines = (cv2.HoughLines(cv2.Canny(Grayscale(src), 50,
+             150, apertureSize=3), 1, np.pi/180, 200))
+    if lines is None:
+        res = "Not Found"
+    else:
+        for r_theta in lines[0]:
+            r, theta = r_theta
+            a = np.cos(theta)
+            b = np.sin(theta)
+            x0 = a*r
+            y0 = b*r
+            x1 = int(x0 + 1000*(-b))
+            y1 = int(y0 + 1000*(a))
+            x2 = int(x0 - 1000*(-b))
+            y2 = int(y0 - 1000*(a))
+            cv2.line(img1, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        res = "Found"
+    return res, img1
