@@ -1,3 +1,5 @@
+# Image Processing Helper
+
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -66,6 +68,7 @@ def CalcHist(img):
 def HistDisplay(img):
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     cv2.imshow("Image", img_gray)
+    print(CalcHist(img))
     plt.plot(CalcHist(img))
     plt.show()
     cv2.waitKey(0)
@@ -111,19 +114,21 @@ def HoughLines(src):
     img1 = src.copy()
     lines = (cv2.HoughLines(cv2.Canny(Grayscale(src), 50,
              150, apertureSize=3), 1, np.pi/180, 200))
+    print(lines)
     if lines is None:
         res = "Not Found"
     else:
-        for r_theta in lines[0]:
-            r, theta = r_theta
-            a = np.cos(theta)
-            b = np.sin(theta)
-            x0 = a*r
-            y0 = b*r
-            x1 = int(x0 + 1000*(-b))
-            y1 = int(y0 + 1000*(a))
-            x2 = int(x0 - 1000*(-b))
-            y2 = int(y0 - 1000*(a))
-            cv2.line(img1, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        for liner in lines:    
+            for r_theta in liner:
+                r, theta = r_theta
+                a = np.cos(theta)
+                b = np.sin(theta)
+                x0 = a*r
+                y0 = b*r
+                x1 = int(x0 + 1000*(-b))
+                y1 = int(y0 + 1000*(a)) 
+                x2 = int(x0 - 1000*(-b))
+                y2 = int(y0 - 1000*(a))
+                cv2.line(img1, (x1, y1), (x2, y2), (0, 255, 0), 1)
         res = "Found"
     return res, img1
