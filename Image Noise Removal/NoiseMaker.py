@@ -20,6 +20,8 @@ def SaltAndPepperSprinkler(img, noiseFactor):
             # Generate a Random Number that will decide whether noise is 
             # present on that pixel or not
             nf = random.random()
+
+            # Either make the pixel white or black or no noise based on the random number
             if nf < (noiseFactor / 2):
                 new_img[i, j] = [0, 0, 0]
             elif nf > (1 - (noiseFactor / 2)):
