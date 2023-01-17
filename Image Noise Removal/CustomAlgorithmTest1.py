@@ -58,7 +58,7 @@ def PreferenceMatrixMaker(img, lightness):
 	return prefMatrix
 
 # Denoising the Image
-def Denoiser(img, lightness, PrefThreshold):
+def Denoiser(img, lightness, ExchangeThreshold, ConsiderationThreshold):
 	prefMatrix = PreferenceMatrixMaker(img, lightness)
 	new_img = np.zeros(img.shape, np.uint8)
 	for i in range(img.shape[0]):
@@ -67,43 +67,43 @@ def Denoiser(img, lightness, PrefThreshold):
 			tempG = 0
 			tempR = 0
 			counter = 0
-			if prefMatrix[i, j] < PrefThreshold : 
-				if i != 0 and prefMatrix[i - 1, j] >= PrefThreshold:
+			if prefMatrix[i, j] <= ExchangeThreshold : 
+				if i != 0 and prefMatrix[i - 1, j] >= ConsiderationThreshold:
 					tempB += img[i - 1, j, 0]
 					tempG += img[i - 1, j, 1]
 					tempR += img[i - 1, j, 2]
 					counter = counter + 1
-				if j != 0 and prefMatrix[i, j - 1] >= PrefThreshold:
+				if j != 0 and prefMatrix[i, j - 1] >= ConsiderationThreshold:
 					tempB += img[i, j - 1, 0]
 					tempG += img[i, j - 1, 1]
 					tempR += img[i, j - 1, 2]
 					counter = counter + 1
-				if i != img.shape[0] - 1 and prefMatrix[i + 1, j] >= PrefThreshold:
+				if i != img.shape[0] - 1 and prefMatrix[i + 1, j] >= ConsiderationThreshold:
 					tempB += img[i + 1, j, 0]
 					tempG += img[i + 1, j, 1]
 					tempR += img[i + 1, j, 2]
 					counter = counter + 1
-				if j != img.shape[1] - 1 and prefMatrix[i, j + 1] >= PrefThreshold:
+				if j != img.shape[1] - 1 and prefMatrix[i, j + 1] >= ConsiderationThreshold:
 					tempB += img[i, j + 1, 0]
 					tempG += img[i, j + 1, 1]
 					tempR += img[i, j + 1, 2]
 					counter = counter + 1
-				if i != 0 and j != 0 and prefMatrix[i - 1, j - 1] >= PrefThreshold:
+				if i != 0 and j != 0 and prefMatrix[i - 1, j - 1] >= ConsiderationThreshold:
 					tempB += img[i - 1, j - 1, 0]
 					tempG += img[i - 1, j - 1, 1]
 					tempR += img[i - 1, j - 1, 2]
 					counter = counter + 1
-				if i != 0 and j != img.shape[1] - 1 and prefMatrix[i - 1, j + 1] >= PrefThreshold:
+				if i != 0 and j != img.shape[1] - 1 and prefMatrix[i - 1, j + 1] >= ConsiderationThreshold:
 					tempB += img[i - 1, j + 1, 0]
 					tempG += img[i - 1, j + 1, 1]
 					tempR += img[i - 1, j + 1, 2]
 					counter = counter + 1
-				if i != img.shape[0] - 1 and j != 0 and prefMatrix[i + 1, j - 1] >= PrefThreshold:
+				if i != img.shape[0] - 1 and j != 0 and prefMatrix[i + 1, j - 1] >= ConsiderationThreshold:
 					tempB += img[i + 1, j - 1, 0]
 					tempG += img[i + 1, j - 1, 1]
 					tempR += img[i + 1, j - 1, 2]
 					counter = counter + 1
-				if i != img.shape[0] - 1 and j != img.shape[1] - 1 and prefMatrix[i + 1, j + 1] >= PrefThreshold:
+				if i != img.shape[0] - 1 and j != img.shape[1] - 1 and prefMatrix[i + 1, j + 1] >= ConsiderationThreshold:
 					tempB += img[i + 1, j + 1, 0]
 					tempG += img[i + 1, j + 1, 1]
 					tempR += img[i + 1, j + 1, 2]
@@ -124,14 +124,10 @@ cv2.imshow("OG Image : ", img)
 
 # Denoising Image
 Lineancy = 100
-PreferenceThreshold = 2
-img2 = Denoiser(img, Lineancy, PreferenceThreshold)
-cv2.imshow(str(Lineancy) + "L  " + str(PreferenceThreshold) + "P", img2)
-
-Lineancy = 160
-PreferenceThreshold = 2
-img2 = Denoiser(img, Lineancy, PreferenceThreshold)
-cv2.imshow(str(Lineancy) + "L  " + str(PreferenceThreshold) + "P", img2)
+ExchangeThreshold = 1
+ConsiderationThreshold = 3
+img2 = Denoiser(img, Lineancy, ExchangeThreshold, ConsiderationThreshold)
+cv2.imshow(str(Lineancy) + "L  " + str(ExchangeThreshold) + "E  "  + str(ConsiderationThreshold) + "C", img2)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
